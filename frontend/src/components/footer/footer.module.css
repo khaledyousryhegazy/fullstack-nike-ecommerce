@@ -1,0 +1,11 @@
+.mainLinks ul {
+  @apply flex flex-col gap-4;
+}
+
+.mainLinks ul li:first-child {
+  @apply font-semibold;
+}
+
+.mainLinks ul li:not(:first-child) {
+  @apply text-[#ffffffbb] hover:text-[#ffffff70] cursor-pointer;
+}

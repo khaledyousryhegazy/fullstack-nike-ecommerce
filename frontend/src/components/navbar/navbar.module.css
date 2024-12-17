@@ -1,0 +1,29 @@
+.links li {
+  @apply relative pl-2 duration-300 hover:text-[#757575];
+}
+
+.links li:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  width: 1px;
+  height: 60%;
+  background-color: black;
+}
+
+.mainLinks li {
+  @apply relative pb-2;
+}
+
+.mainLinks li a::before {
+  content: "";
+  @apply absolute bottom-0 left-0  h-[2px] duration-300 hover:w-full;
+}
+
+@media (max-width: 768px) {
+  .mainLinks {
+    @apply z-10 fixed w-full h-full top-0 flex-col justify-center items-center bg-white;
+  }
+}
