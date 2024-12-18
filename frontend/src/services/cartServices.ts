@@ -1,11 +1,8 @@
 import axios from "axios";
 import Alert from "@/components/Alert";
+import { user } from "@/utils/user";
 
 const API_URL = "http://localhost:8000/cart";
-
-// get userId from localStorage if exist
-const storedUser = localStorage.getItem("user");
-const user = storedUser ? JSON.parse(storedUser) : null;
 
 // get all products from the cart based on userId
 export const getCart = async () => {

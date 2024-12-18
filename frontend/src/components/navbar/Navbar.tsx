@@ -6,7 +6,7 @@ import style from "./navbar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import { FiMenu } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProducts } from "@/store/productStore";
 import { IoBagHandleOutline } from "react-icons/io5";
 import { useCart } from "@/store/cartStore";
@@ -27,6 +27,15 @@ export default function Navbar() {
   }
 
   const data = useCart( ( state ) => state.cart );
+
+  const getAll = useCart( ( state ) => state.getAllProducts );
+  useEffect( () => {
+    const fetchData = async () => {
+
+      await getAll();
+    };
+    fetchData();
+  }, [] );
 
   return (
     <div>
@@ -67,7 +76,9 @@ export default function Navbar() {
             </div>
 
             <Link href={ '/cart' } className="relative" >
-              <span className="flex items-center justify-center absolute -top-2 -right-2 bg-blue-400 text-white w-3 h-3 rounded-full text-sm p-2 ">{ data?.data?.items?.length }</span>
+              { data?.data?.items?.length ?
+                <span className="flex items-center justify-center absolute -top-2 -right-2 bg-blue-400 text-white w-3 h-3 rounded-full text-sm p-2 ">{ data?.data?.items?.length }</span>
+                : '' }
               <IoBagHandleOutline size={ 26 } className={ path === '/cart' ? "text-blue-400" : "" } />
             </Link>
 

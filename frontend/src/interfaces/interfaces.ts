@@ -10,18 +10,37 @@ export interface Products {
 }
 
 interface CartItem {
-    product: Products;
-    quantity: number;
-    _id: string;
+  product: Products;
+  quantity: number;
+  _id: string;
 }
 
 export interface ICart {
-    success: boolean;
-    data: {
-        _id: string;
-        createdAt: string;
-        items: CartItem[];
-        totalAmount: number;
-        userId: string;
-    };
+  success: boolean;
+  data: {
+    _id: string;
+    createdAt: string;
+    items: CartItem[];
+    totalAmount: number;
+    userId: string;
+  };
+}
+
+export interface IOrder {
+  shippingAddress: string;
+  paymentMethod?: string;
+}
+
+export interface IOrderData {
+  userId: string;
+  totalAmount: number;
+  status: string;
+  shippingAddress: string;
+  paymentMethod: string;
+  _id: string;
+  items: {
+    product: Products[];
+    quantity: number;
+    _id: string;
+  };
 }
