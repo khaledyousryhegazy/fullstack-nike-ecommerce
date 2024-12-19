@@ -11,7 +11,7 @@ import { create } from "zustand";
 
 type storeType = {
   cart: ICart | null;
-  orders: IOrderData[] | null;
+  orders: IOrderData | null;
   getAllOrders: () => Promise<void>;
   createOrder: (data: IOrder) => Promise<void>;
   getAllProducts: () => Promise<void>;

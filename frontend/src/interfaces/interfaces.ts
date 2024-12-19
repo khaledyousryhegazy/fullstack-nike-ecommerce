@@ -9,7 +9,7 @@ export interface Products {
   ageGroup: string;
 }
 
-interface CartItem {
+export interface CartItem {
   product: Products;
   quantity: number;
   _id: string;
@@ -26,21 +26,30 @@ export interface ICart {
   };
 }
 
-export interface IOrder {
-  shippingAddress: string;
-  paymentMethod?: string;
+export interface OrderItem {
+  product: Products;
+  quantity: number;
+  _id: string;
 }
 
-export interface IOrderData {
+export interface OrderArray {
   userId: string;
   totalAmount: number;
   status: string;
   shippingAddress: string;
   paymentMethod: string;
   _id: string;
-  items: {
-    product: Products[];
-    quantity: number;
-    _id: string;
-  };
+  items: OrderItem[]; // Fixed type here
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IOrderData {
+  success: boolean;
+  orders: OrderArray[];
+}
+
+export interface IOrder {
+  shippingAddress: string;
+  paymentMethod?: string;
 }
