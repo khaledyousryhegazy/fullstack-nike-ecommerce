@@ -95,7 +95,7 @@ export function CheckoutForm() {
                             ) }
                         </div>
 
-                        <Select name="paymentMethod" onChange={ ( value ) => handleSelectChange( value ) } label="Select Version">
+                        <Select name="paymentMethod" onChange={ ( value ) => handleSelectChange( value ) } label="Payment Method">
                             <Option value="cash">Cash On Delivery</Option>
                             <Option value="card" disabled>Card</Option>
                         </Select>

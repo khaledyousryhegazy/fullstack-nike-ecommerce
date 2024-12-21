@@ -1,10 +1,12 @@
 import { create } from "zustand";
 import axios from "axios";
 import { Products } from "@/interfaces/interfaces";
+import Alert from "@/components/Alert";
 
 type State = {
   loader: boolean;
   products: Products[];
+  product: Products | null;
   searchValue: Products[];
   message: string;
   value: string;
@@ -14,11 +16,13 @@ type State = {
   setFilters: (filters: string[] | ((prev: string[]) => string[])) => void;
   fetchProducts: () => Promise<void>;
   searchResult: (searchWords: string) => Promise<void>;
+  getSingleProduct: (_id: string) => Promise<void>;
 };
 
 export const useProducts = create<State>((set, get) => ({
   loader: false,
   products: [],
+  product: null,
   searchValue: [],
   message: "",
   value: "",
@@ -108,6 +112,19 @@ export const useProducts = create<State>((set, get) => ({
         message:
           "Failed to fetch products. Please check your connection or try again later. 🔄",
       });
+    }
+  },
+
+  getSingleProduct: async (_id: string) => {
+    try {
+      const API_LINK = `http://localhost:8000/api/products/${_id}`;
+      const response = await axios.get(API_LINK);
+
+      set({ product: response.data?.data });
+    } catch (error) {
+      // Handle and log the error
+      const fetchError = error instanceof Error ? error.message : String(error);
+      Alert({ title: `Error fetching product: ${fetchError}`, icon: "error" });
     }
   },
 }));

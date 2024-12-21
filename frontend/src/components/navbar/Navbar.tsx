@@ -59,7 +59,7 @@ export default function Navbar() {
                 <Link className={ ` ${ path === '/' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" } ` } href={ '/' }>Home</Link>
               </li>
               <li>
-                <Link className={ ` ${ path === '/new-featured' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" } ` } href={ '/new-featured' }>Shop</Link>
+                <Link className={ ` ${ path === '/products' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" } ` } href={ '/products' }>Shop</Link>
               </li>
               <li>
                 <Link className={ ` ${ path === '/my-orders' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" } ` } href={ '/my-orders' }>Orders</Link>

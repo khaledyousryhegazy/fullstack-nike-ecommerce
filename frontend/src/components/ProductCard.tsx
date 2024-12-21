@@ -1,6 +1,6 @@
 import { Products } from "@/interfaces/interfaces";
 import { useCart } from "@/store/cartStore";
-// import Link from "next/link";
+import Link from "next/link";
 import { IoBagHandleOutline } from "react-icons/io5";
 
 
@@ -14,11 +14,11 @@ export default function ProductCard( { product }: IData ) {
 
     return (
         <div className="w-fit mx-auto " >
-            <div className="w-fit block relative">
+            <Link href={ `/products/${ product._id }` } className="w-fit block relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */ }
                 <img src={ `http://localhost:8000/${ product.image }` } className="min-w-[300px] w-full max-w-[441px]" alt={ product.title } />
                 <IoBagHandleOutline size={ 26 } onClick={ () => addToCart( product._id ) } className="cursor-pointer absolute top-5 left-5 hover:text-blue-400" />
-            </div>
+            </Link>
 
             <div className="font-semibold text-sm flex items-center justify-between pt-2">
                 <h3 className="capitalize">{ product.title }</h3>
