@@ -23,7 +23,7 @@ export default function ProductDetails( { _id }: { _id: string } ) {
         <div className="container">
             <div className="my-10 flex flex-col md:flex-row md:items-center justify-center md:justify-start gap-10">
 
-                <Image src={ `http://localhost:8000/${ product?.image }` } width={ 400 } height={ 100 } alt={ product?.title || "nike product" } />
+                <Image src={ `http://localhost:8000/${ product?.image }` } className="m-auto md:m-0" width={ 400 } height={ 100 } alt={ product?.title || "nike product" } />
 
                 <div className="flex flex-col gap-2">
                     <h1 className="font-semibold text-2xl">{ product?.title }</h1>
