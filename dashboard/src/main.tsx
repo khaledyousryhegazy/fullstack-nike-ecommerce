@@ -1,0 +1,28 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+import { ThemeProvider } from './components/theme-provider.tsx'
+import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar.tsx'
+import { AppSidebar } from './components/app-sidebar.tsx'
+import Navbar from './components/Navbar.tsx'
+import { BrowserRouter } from 'react-router-dom'
+
+createRoot( document.getElementById( 'root' )! ).render(
+  <StrictMode>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <SidebarProvider>
+          <AppSidebar />
+          <div className='flex flex-col w-full px-2.5'>
+            <div className='flex flex-row-reverse px-2.5 py-2.5'>
+              <Navbar />
+              <SidebarTrigger />
+            </div>
+            <App />
+          </div>
+        </SidebarProvider>
+      </BrowserRouter>
+    </ThemeProvider>
+  </StrictMode>,
+)
