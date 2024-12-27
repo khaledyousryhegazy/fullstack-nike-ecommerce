@@ -7,7 +7,6 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
     res.status(200).json({ success: true, data: users });
-    console.log(users);
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -72,4 +71,34 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, register, login };
+// Update user role (Admin-only)
+const updateUserRole = async (req, res) => {
+  const { userId, newRole } = req.body;
+
+  try {
+    // Assuming req.user contains the logged-in user
+    if (req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ success: false, msg: "Only admins can update roles" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+
+    user.role = newRole;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      msg: "User role updated successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+module.exports = { getAllUsers, register, login, updateUserRole };

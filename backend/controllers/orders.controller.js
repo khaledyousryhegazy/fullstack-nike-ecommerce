@@ -63,4 +63,31 @@ const getUserOrders = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getUserOrders };
+// Update the status of an order
+const updateOrderStatus = async (req, res) => {
+  const { orderId, status } = req.body;
+
+  if (!orderId || !status) {
+    return res.status(400).json({ success: false, msg: "Invalid data" });
+  }
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ success: false, msg: "Order not found" });
+    }
+
+    // Update the order status
+    order.status = status;
+    await order.save();
+
+    res.status(200).json({ success: true, msg: "Order status updated", order });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+module.exports = { createOrder, getUserOrders, updateOrderStatus };
+
+module.exports = { createOrder, getUserOrders, updateOrderStatus };
