@@ -1,8 +1,13 @@
+import Statistics from "@/components/dashboard/Statistics";
+import Graph from "@/components/dashboard/Graph";
+import Earning from "@/components/dashboard/Earning";
 
 export default function Dashboard() {
     return (
         <div>
-            <div>this is dashboard</div>
+            <Statistics />
+            <Earning />
+            <Graph />
         </div>
     )
 }

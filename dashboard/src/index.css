@@ -85,3 +85,7 @@
 * {
   box-sizing: border-box;
 }
+
+.dashboard-box-style {
+  @apply rounded-md bg-[#fafafa] dark:bg-[#18181b] shadow-md dark:shadow-none p-5 capitalize font-semibold;
+}
