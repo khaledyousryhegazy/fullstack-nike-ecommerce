@@ -30,6 +30,7 @@ import { addSchema } from "../validationSchema";
 
 export default function EditProductForm( { product }: { product: IProducts } ) {
     const dispatch = useAppDispatch();
+    const [ open, setOpen ] = useState<boolean>( false );
     const [ data, setData ] = useState<IProducts>( {
         image: product?.image || "",
         title: product?.title || "",
@@ -78,6 +79,7 @@ export default function EditProductForm( { product }: { product: IProducts } ) {
         try {
             await editProduct( product!._id, data );
             dispatch( fetchProducts( 1 ) );
+            setOpen( false )
         } catch ( error ) {
             console.error( "Failed to update product:", error );
         }
@@ -85,7 +87,7 @@ export default function EditProductForm( { product }: { product: IProducts } ) {
 
     return (
         <div className="mx-3">
-            <Dialog>
+            <Dialog open={ open } onOpenChange={ setOpen }>
                 <DialogTrigger asChild>
                     <PencilOff size={ 20 } className="cursor-pointer hover:text-blue-600" />
                 </DialogTrigger>

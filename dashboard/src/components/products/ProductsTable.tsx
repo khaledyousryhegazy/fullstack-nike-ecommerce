@@ -21,6 +21,7 @@ import { LoadingSpinner } from "../LoadingSpinner";
 import { TablePagination } from "../Pagination";
 import MainTitle from "../MainTitle";
 import booster from "@/assets/booster.jpg"
+
 export default function ProductsTable() {
     const dispatch = useAppDispatch();
     const products = useSelector( selectProducts );

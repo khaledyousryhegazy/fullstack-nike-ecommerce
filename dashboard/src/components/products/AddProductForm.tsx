@@ -26,8 +26,12 @@ import React, { useState } from "react";
 import { addSchema } from "../validationSchema";
 import { createProduct } from "@/services/products";
 import { IProducts } from "@/interfaces/interfaces";
+import { fetchProducts } from "@/rtk/features/productThunk";
+import { useAppDispatch } from "@/hooks/useAppDispatch";
 
 export default function AddProductForm() {
+    const dispatch = useAppDispatch();
+    const [ open, setOpen ] = useState<boolean>( false );
     const [ data, setData ] = useState<IProducts>( {
         image: "",
         title: "",
@@ -37,43 +41,23 @@ export default function AddProductForm() {
         gender: "",
         ageGroup: "",
     } );
-    const [ errors, setErrors ] = useState<{
-        title?: string;
-        price?: string;
-        category?: string;
-        gender?: string;
-        ageGroup?: string;
-    }>( {} );
+    const [ errors, setErrors ] = useState<Partial<Record<keyof IProducts, string>>>( {} );
 
     const handleChange = ( e: React.ChangeEvent<HTMLInputElement> ) => {
         const { name, value } = e.target;
-
-        // Handle price as a number
-        if ( name === "price" ) {
-            setData( ( prev ) => ( { ...prev, [ name ]: parseFloat( value ) } ) );
-        } else {
-            setData( ( prev ) => ( { ...prev, [ name ]: value } ) );
-        }
+        setData( ( prev ) => ( {
+            ...prev,
+            [ name ]: name === "price" ? parseFloat( value ) || 0 : value,
+        } ) );
+    };
+    const handleSelectChange = ( name: string, value: string ) => {
+        setData( ( prev ) => ( { ...prev, [ name ]: value } ) );
     };
 
-    const handleSubmit = async ( event: React.FormEvent<HTMLFormElement> ) => {
-        event.preventDefault();
-
-        if ( !data.title || !data.price || !data.category || !data.gender || !data.ageGroup ) {
-            setErrors( {
-                title: "Title is required",
-                price: "Price is required",
-                category: "Category is required",
-                gender: "Gender is required",
-                ageGroup: "Age group is required",
-            } );
-            return;
-        }
-
-        // Validation using Zod
-        const validation = addSchema.safeParse( data );
-        if ( !validation.success ) {
-            const fieldErrors = validation.error.flatten().fieldErrors;
+    const validate = (): boolean => {
+        const validationResult = addSchema.safeParse( data );
+        if ( !validationResult.success ) {
+            const fieldErrors = validationResult.error.flatten().fieldErrors;
             setErrors( {
                 title: fieldErrors.title?.[ 0 ],
                 price: fieldErrors.price?.[ 0 ],
@@ -81,17 +65,29 @@ export default function AddProductForm() {
                 gender: fieldErrors.gender?.[ 0 ],
                 ageGroup: fieldErrors.ageGroup?.[ 0 ],
             } );
-            return;
+            return false;
+        }
+        setErrors( {} );
+        return true;
+    };
+
+    const handleSubmit = async ( event: React.FormEvent<HTMLFormElement> ) => {
+        event.preventDefault();
+        if ( !validate() ) return;
+
+        try {
+            await createProduct( data );
+            dispatch( fetchProducts( 1 ) );
+            setOpen( false )
+        } catch ( error ) {
+            console.error( "Failed to update product:", error );
         }
 
-        setErrors( {} );
-
-        await createProduct( data );
     };
 
     return (
         <div className="mx-3">
-            <Dialog>
+            <Dialog open={ open } onOpenChange={ setOpen }>
                 <DialogTrigger asChild>
                     <Button variant="outline">
                         <Plus /> Add New Product
@@ -167,10 +163,10 @@ export default function AddProductForm() {
                                 <div className="col-span-3">
                                     <Select
                                         value={ data.gender }
-                                        onValueChange={ ( value ) => {
-                                            setData( ( prev ) => ( { ...prev, gender: value } ) );
-                                        } }
                                         name="gender"
+                                        onValueChange={ ( value ) => {
+                                            handleSelectChange( "gender", value )
+                                        } }
                                     >
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select gender" />
@@ -195,10 +191,10 @@ export default function AddProductForm() {
                                 <div className="col-span-3">
                                     <Select
                                         value={ data.ageGroup }
-                                        onValueChange={ ( value ) => {
-                                            setData( ( prev ) => ( { ...prev, ageGroup: value } ) );
-                                        } }
                                         name="ageGroup"
+                                        onValueChange={ ( value ) => {
+                                            handleSelectChange( "ageGroup", value )
+                                        } }
                                     >
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select age group" />
