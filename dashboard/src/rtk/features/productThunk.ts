@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllProducts } from "@/services/products";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Fetch all products
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
-  async (_, { rejectWithValue }) => {
+  async (page: number) => {
     try {
-      const products = await getAllProducts();
+      const products = await getAllProducts(page);
       if (!products) throw new Error("No products available.");
       return products;
-    } catch (error: any) {
-      console.error("Error fetching products:", error);
-      return rejectWithValue(error.message || "Failed to fetch products.");
+    } catch (error) {
+      const fetchError = error instanceof Error ? error.message : String(error);
+      console.error("Error fetching products:", fetchError);
     }
   }
 );

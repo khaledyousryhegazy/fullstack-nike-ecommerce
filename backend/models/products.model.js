@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const productSchema = new Schema(
   {
-    image: { type: String, required: true },
+    image: { type: String },
     title: { type: String, required: true },
     description: { type: String },
     price: { type: Number, required: true },

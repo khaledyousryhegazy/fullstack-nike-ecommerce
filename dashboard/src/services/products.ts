@@ -4,7 +4,7 @@ import axios from "axios";
 const API_BASE_URL = "http://localhost:8000/api";
 
 // Get all products
-export const getAllProducts = async (page = 1, limit = 200) => {
+export const getAllProducts = async (page: number, limit = 10) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/products`, {
       params: { page, limit },
@@ -30,7 +30,7 @@ export const getAllProducts = async (page = 1, limit = 200) => {
 // create products
 export const createProduct = async (data: IProducts) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/products/`, { data });
+    const response = await axios.post(`${API_BASE_URL}/products`, data);
 
     if (!response) {
       console.error("there's no response !!");
@@ -48,11 +48,14 @@ export const createProduct = async (data: IProducts) => {
 };
 
 // edit products
-export const editProduct = async (id: string, data: IProducts) => {
+export const editProduct = async (id: string | undefined, data: IProducts) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/products/${id}`, {
-      data,
-    });
+    if (!id) {
+      console.log("there's no id found");
+      return;
+    }
+
+    const response = await axios.put(`${API_BASE_URL}/products/${id}`, data);
 
     if (!response) {
       console.error("there's no response !!");

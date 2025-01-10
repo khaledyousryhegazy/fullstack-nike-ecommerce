@@ -86,14 +86,28 @@ export const useProducts = create<State>((set, get) => ({
 
     try {
       const API_LINK = `http://localhost:8000/api/products`;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let allProducts: any[] = [];
+      let hasNextPage = true;
+      let currentPage = 1;
+      const pageSize = 100; // Set a page size that your API can handle efficiently
 
-      const params = { page: 1, limit: 100 };
+      // Fetch products page by page until all are retrieved
+      while (hasNextPage) {
+        const { data: products } = await axios.get(API_LINK, {
+          params: { page: currentPage, limit: pageSize },
+        });
 
-      // Fetch data from API
-      const { data: products = [] } = await axios.get(API_LINK, { params });
+        if (products.length > 0) {
+          allProducts = [...allProducts, ...products];
+          currentPage++; // Move to next page
+        } else {
+          hasNextPage = false; // Stop if no more products are found
+        }
+      }
 
       // Filter results based on search words
-      const results = products.filter((item: { title: string }) =>
+      const results = allProducts.filter((item: { title: string }) =>
         item?.title.toLowerCase().includes(searchWords.toLowerCase())
       );
 
@@ -105,7 +119,6 @@ export const useProducts = create<State>((set, get) => ({
       });
     } catch (error) {
       console.error("Error fetching products:", error);
-
       set({
         searchValue: [],
         loader: false,
