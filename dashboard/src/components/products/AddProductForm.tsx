@@ -28,9 +28,11 @@ import { createProduct } from "@/services/products";
 import { IProducts } from "@/interfaces/interfaces";
 import { fetchProducts } from "@/rtk/features/productThunk";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AddProductForm() {
     const dispatch = useAppDispatch();
+    const { toast } = useToast()
     const [ open, setOpen ] = useState<boolean>( false );
     const [ data, setData ] = useState<IProducts>( {
         image: "",
@@ -79,6 +81,11 @@ export default function AddProductForm() {
             await createProduct( data );
             dispatch( fetchProducts( 1 ) );
             setOpen( false )
+
+            toast( {
+                description: "Product Created Successfully",
+            } )
+
         } catch ( error ) {
             console.error( "Failed to update product:", error );
         }

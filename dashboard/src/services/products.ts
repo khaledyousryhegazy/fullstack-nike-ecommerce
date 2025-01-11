@@ -36,8 +36,6 @@ export const createProduct = async (data: IProducts) => {
       console.error("there's no response !!");
       return null;
     }
-
-    console.log("product created successfully");
   } catch (error) {
     const responseError =
       error instanceof Error ? error.message : String(error);
@@ -61,8 +59,6 @@ export const editProduct = async (id: string | undefined, data: IProducts) => {
       console.error("there's no response !!");
       return null;
     }
-
-    console.log("product modified successfully");
   } catch (error) {
     const responseError =
       error instanceof Error ? error.message : String(error);
@@ -81,8 +77,6 @@ export const deleteProduct = async (id: string) => {
       console.error("there's no response !!");
       return null;
     }
-
-    console.log("product deleted successfully");
   } catch (error) {
     const responseError =
       error instanceof Error ? error.message : String(error);

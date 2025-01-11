@@ -83,7 +83,7 @@ export default function ProductsTable() {
 
                                     <TableCell className="flex items-center gap-2">
                                         <EditProductForm product={ item } />
-                                        <DeleteProduct />
+                                        <DeleteProduct id={ item._id || '' } />
                                     </TableCell>
                                 </TableRow>
                             ) )

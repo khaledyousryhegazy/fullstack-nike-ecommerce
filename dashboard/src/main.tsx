@@ -9,6 +9,7 @@ import Navbar from './components/Navbar.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './rtk/store.ts'
+import { Toaster } from './components/ui/toaster.tsx'
 
 createRoot( document.getElementById( 'root' )! ).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot( document.getElementById( 'root' )! ).render(
                 <SidebarTrigger />
               </div>
               <App />
+              <Toaster />
             </div>
           </SidebarProvider>
         </BrowserRouter>

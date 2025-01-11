@@ -27,9 +27,11 @@ import { editProduct } from "@/services/products";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { fetchProducts } from "@/rtk/features/productThunk";
 import { addSchema } from "../validationSchema";
+import { useToast } from "@/hooks/use-toast";
 
 export default function EditProductForm( { product }: { product: IProducts } ) {
     const dispatch = useAppDispatch();
+    const { toast } = useToast()
     const [ open, setOpen ] = useState<boolean>( false );
     const [ data, setData ] = useState<IProducts>( {
         image: product?.image || "",
@@ -80,6 +82,11 @@ export default function EditProductForm( { product }: { product: IProducts } ) {
             await editProduct( product!._id, data );
             dispatch( fetchProducts( 1 ) );
             setOpen( false )
+
+            toast( {
+                description: "Product Modified Successfully",
+            } )
+
         } catch ( error ) {
             console.error( "Failed to update product:", error );
         }
