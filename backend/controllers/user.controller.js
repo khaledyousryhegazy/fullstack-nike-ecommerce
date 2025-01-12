@@ -56,12 +56,15 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ success: false, msg: "User not found" });
     }
+
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "Invalid credentials" });
+      return res.status(400).json({
+        success: false,
+        msg: "password Isn't correct",
+      });
     }
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "90d",
     });

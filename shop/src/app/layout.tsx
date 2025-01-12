@@ -37,14 +37,14 @@ export default function RootLayout( {
         className={ `${ geistSans.variable } ${ geistMono.variable } antialiased` }
       >
         <AuthProvider>
-          <SubNavbar />
-          <Navbar />
           <ProtectRoutes>
+            <SubNavbar />
+            <Navbar />
             <main style={ { minHeight: 'calc(100vh - 132px - 424px)' } }>
               { children }
             </main>
+            <Footer />
           </ProtectRoutes>
-          <Footer />
         </AuthProvider>
 
       </body>

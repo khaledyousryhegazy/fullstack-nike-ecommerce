@@ -10,59 +10,68 @@ import { useEffect, useState } from "react";
 import { useProducts } from "@/store/productStore";
 import { IoBagHandleOutline } from "react-icons/io5";
 import { useCart } from "@/store/cartStore";
+import { useAuth } from "@/context/AuthContext"; // Import useAuth
 
 export default function Navbar() {
+  const { token, user } = useAuth(); // Get token and user from AuthContext
   const router = useRouter();
-
   const path = usePathname();
 
-  const [ open, setOpen ] = useState( false )
+  const [ open, setOpen ] = useState( false );
 
-  const searchResult = useProducts( state => state.searchResult )
+  const searchResult = useProducts( state => state.searchResult );
 
   const handleSearch = ( value: string ) => {
-    router.push( '/search-result' )
-
-    searchResult( value )
-  }
+    router.push( '/search-result' );
+    searchResult( value );
+  };
 
   const data = useCart( ( state ) => state.cart );
-
   const getAll = useCart( ( state ) => state.getAllProducts );
   useEffect( () => {
     const fetchData = async () => {
-
       await getAll();
     };
     fetchData();
   }, [] );
+
+  // Handle logout or restrict access to certain links
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleLinkClick = ( e: React.MouseEvent, href: string ) => {
+    if ( !token || !user ) {
+      e.preventDefault(); // Prevent navigation
+      router.push( '/login' ); // Redirect to login
+    }
+  };
 
   return (
     <div>
       <div className="container">
         <div className="relative flex items-center justify-between py-5">
           <div className="flex items-center gap-2">
-
             <Image src={ logo } style={ { width: "60px", height: "60px" } } alt="nike-logo" />
-
             <div className="md:hidden">
               <FiMenu className="text-2xl cursor-pointer" onClick={ () => setOpen( true ) } />
             </div>
-
           </div>
 
-          <div >
+          <div>
             <ul className={ `${ style.mainLinks } transition-all duration-300 flex items-center gap-5 font-semibold ${ open ? "right-0" : "-right-full" }` }>
               <IoMdClose className="md:hidden ml-auto mr-10 mb-32 -mt-32 text-2xl cursor-pointer" onClick={ () => setOpen( false ) } />
-
               <li>
-                <Link className={ ` ${ path === '/' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" } ` } href={ '/' }>Home</Link>
+                <Link className={ `${ path === '/' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" }` } href="/" onClick={ ( e ) => handleLinkClick( e, '/' ) }>
+                  Home
+                </Link>
               </li>
               <li>
-                <Link className={ ` ${ path === '/products' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" } ` } href={ '/products' }>Shop</Link>
+                <Link className={ `${ path === '/products' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" }` } href="/products" onClick={ ( e ) => handleLinkClick( e, '/products' ) }>
+                  Shop
+                </Link>
               </li>
               <li>
-                <Link className={ ` ${ path === '/my-orders' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" } ` } href={ '/my-orders' }>Orders</Link>
+                <Link className={ `${ path === '/my-orders' ? "before:w-full text-blue-400 before:bg-blue-400" : "before:w-0 before:bg-black" }` } href="/my-orders" onClick={ ( e ) => handleLinkClick( e, '/my-orders' ) }>
+                  Orders
+                </Link>
               </li>
             </ul>
           </div>
@@ -78,16 +87,13 @@ export default function Navbar() {
               <input onChange={ ( e ) => handleSearch( e.target.value ) } type="search" id="default-search" className="block w-fit p-2 ps-10 text-sm text-gray-900 rounded-full outline-none bg-[#F5F5F5]" placeholder="Search ..." required />
             </div>
 
-            <Link href={ '/cart' } className="relative" >
-              { data?.data?.items?.length ?
-                <span className="flex items-center justify-center absolute -top-2 -right-2 bg-blue-400 text-white w-3 h-3 rounded-full text-sm p-2 ">{ data?.data?.items?.length }</span>
-                : '' }
+            <Link href="/cart" className="relative" onClick={ ( e ) => handleLinkClick( e, '/' ) }>
+              { data?.data?.items?.length ? <span className="flex items-center justify-center absolute -top-2 -right-2 bg-blue-400 text-white w-3 h-3 rounded-full text-sm p-2 ">{ data?.data?.items?.length }</span> : '' }
               <IoBagHandleOutline size={ 26 } className={ path === '/cart' ? "text-blue-400" : "" } />
             </Link>
-
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
