@@ -5,8 +5,14 @@ const jwt = require("jsonwebtoken");
 // Get all users
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({});
-    res.status(200).json({ success: true, data: users });
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const users = await User.find({})
+      .skip(parseInt(skip))
+      .limit(parseInt(limit));
+
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ success: false, msg: error.message });
   }
@@ -104,4 +110,28 @@ const updateUserRole = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, register, login, updateUserRole };
+const deleteUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // uncomment when finish auth
+    // if (req.user.role !== "admin") {
+    //   return res
+    //     .status(403)
+    //     .json({ success: false, msg: "Only admins can delete users" });
+    // }
+
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+
+    await Cart.deleteOne({ userId: userId }); // Delete the user's cart
+
+    res.status(200).json({ success: true, msg: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+module.exports = { getAllUsers, register, login, updateUserRole, deleteUser };

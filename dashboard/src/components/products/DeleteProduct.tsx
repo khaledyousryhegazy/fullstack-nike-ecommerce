@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast"
 import { useAppDispatch } from "@/hooks/useAppDispatch"
-import { fetchProducts } from "@/rtk/features/productThunk"
+import { fetchProducts } from "@/rtk/features/products/productThunk"
 import { deleteProduct } from "@/services/products"
 import { Trash2 } from "lucide-react"
 

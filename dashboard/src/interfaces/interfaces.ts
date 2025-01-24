@@ -53,3 +53,10 @@ export interface IOrder {
   shippingAddress: string;
   paymentMethod?: string;
 }
+
+export interface IUser {
+  _id?: string;
+  username: string;
+  email: string;
+  createdAt: string;
+}

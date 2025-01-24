@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/table";
 
 import { useAppDispatch } from "@/hooks/useAppDispatch";
-import { selectLoading, selectProducts } from "@/rtk/features/productSelectors";
-import { fetchProducts } from "@/rtk/features/productThunk";
+import { selectLoading, selectProducts } from "@/rtk/features/products/productSelectors";
+import { fetchProducts } from "@/rtk/features/products/productThunk";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AddProductForm from "./AddProductForm";
@@ -59,7 +59,7 @@ export default function ProductsTable() {
                         { products.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={ 6 } className="capitalize text-center">
-                                    There's no more products to show.
+                                    There's no products to show.
                                 </TableCell>
                             </TableRow>
                         ) : (

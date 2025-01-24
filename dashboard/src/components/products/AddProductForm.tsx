@@ -26,7 +26,7 @@ import React, { useState } from "react";
 import { addSchema } from "../validationSchema";
 import { createProduct } from "@/services/products";
 import { IProducts } from "@/interfaces/interfaces";
-import { fetchProducts } from "@/rtk/features/productThunk";
+import { fetchProducts } from "@/rtk/features/products/productThunk";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { useToast } from "@/hooks/use-toast";
 
