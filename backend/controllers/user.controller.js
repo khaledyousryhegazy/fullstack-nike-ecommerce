@@ -20,7 +20,7 @@ const getAllUsers = async (req, res) => {
 
 // Register a new user
 const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role = "user" } = req.body; // Include 'role'
 
   try {
     const existingUser = await User.findOne({ email });
@@ -30,8 +30,8 @@ const register = async (req, res) => {
         .json({ success: false, msg: "User already exists" });
     }
 
-    // Create and save new user
-    const newUser = new User({ username, email, password });
+    // Create and save new user with the specified role
+    const newUser = new User({ username, email, password, role });
     await newUser.save();
 
     // Create a cart for the new user
@@ -39,9 +39,13 @@ const register = async (req, res) => {
     await newCart.save();
 
     // Generate JWT token
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "90d",
-    });
+    const token = jwt.sign(
+      { userId: newUser._id, role: newUser.role },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "90d",
+      }
+    );
 
     res.status(201).json({
       success: true,
@@ -85,7 +89,6 @@ const updateUserRole = async (req, res) => {
   const { userId, newRole } = req.body;
 
   try {
-    // Assuming req.user contains the logged-in user
     if (req.user.role !== "admin") {
       return res
         .status(403)

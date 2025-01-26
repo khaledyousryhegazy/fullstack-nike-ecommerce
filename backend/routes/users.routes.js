@@ -17,7 +17,8 @@ const router = express.Router();
 router.get("/all", getAllUsers); // Admin-only
 router.post("/register", register);
 router.post("/login", login);
-router.put("/update-role", auth, adminAuth, updateUserRole); // Admin-only
+// router.put("/update-role", auth, adminAuth, updateUserRole); // Admin-only
+router.put("/update-role", updateUserRole); // Admin-only
 // router.delete("/delete/:userId", auth, adminAuth, deleteUser); // Admin-only
 router.delete("/delete/:userId", deleteUser); // Admin-only
 
