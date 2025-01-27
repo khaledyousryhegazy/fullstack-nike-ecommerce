@@ -71,16 +71,16 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({
         success: false,
-        msg: "password Isn't correct",
+        msg: "Password isn't correct",
       });
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "90d",
     });
-    res.status(200).json({ success: true, token: token, user: user });
+    res.status(200).json({ success: true, token, user });
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    res.status(500).json({ success: false, msg: "Internal server error" });
   }
 };
 

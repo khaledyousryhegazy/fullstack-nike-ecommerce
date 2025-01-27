@@ -21,7 +21,8 @@ export default function RootLayout() {
         <div className="flex flex-row-reverse p-2.5">
           <Navbar />
         </div>
-        <App />;
+        <App />
+        <Toaster />
       </div>
     )
   }

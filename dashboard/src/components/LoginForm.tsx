@@ -1,56 +1,59 @@
-// RegisterForm.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { z } from "zod";
-import { createUser } from "@/rtk/features/register/registerThunk";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { loginToDashboard } from "@/rtk/features/login/loginThunk";
 import { useSelector } from "react-redux";
-import { selectError } from "@/rtk/features/register/registerSelectors"; // Select error from state
+import { selectLoginError, selectLoginLoading, selectLoginSuccess, selectLoginUserInfo, selectLoginUserToken } from "@/rtk/features/login/LoginSelectors";
+import { useToast } from "@/hooks/use-toast";
+import Cookies from 'js-cookie';
 
-const registerSchema = z.object( {
-    username: z.string().min( 3, 'username should be more than 3 characters' ),
+const loginSchema = z.object( {
     email: z.string().email(),
     password: z.string().min( 4, 'password should be more than 4 characters' )
-} );
+} )
 
-export default function RegisterForm() {
+export default function LoginForm() {
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
-    const { toast } = useToast();
+    const navigate = useNavigate()
+    const { toast } = useToast()
+    // login selectors
+    const success = useSelector( selectLoginSuccess )
+    const loading = useSelector( selectLoginLoading )
+    const loginError = useSelector( selectLoginError )
+    const userInfo = useSelector( selectLoginUserInfo )
+    const token = useSelector( selectLoginUserToken )
 
-    // Get error from the Redux state
-    const error = useSelector( selectError );
 
     const [ data, setData ] = useState( {
-        username: "",
         email: "",
         password: "",
-        role: "admin"
     } );
 
-    const [ errors, setErrors ] = useState<{ username?: string, email?: string, password?: string }>( {} );
+    const [ errors, setErrors ] = useState<{ email?: string, password?: string }>( {} );
 
     const handleChange = ( e: React.ChangeEvent<HTMLInputElement> ) => {
         const { name, value } = e.target;
-        setData( prev => ( {
+        setData( ( prev ) => ( {
             ...prev,
             [ name ]: value,
         } ) );
     };
 
+
     const handleSubmit = async ( event: React.FormEvent<HTMLFormElement> ) => {
         event.preventDefault();
 
-        const validationResult = registerSchema.safeParse( data );
+        const validationResult = loginSchema.safeParse( data );
 
         if ( !validationResult.success ) {
             const fieldErrors = validationResult.error.flatten().fieldErrors;
             setErrors( {
-                username: fieldErrors.username?.[ 0 ],
                 email: fieldErrors.email?.[ 0 ],
                 password: fieldErrors.password?.[ 0 ],
             } );
@@ -59,49 +62,49 @@ export default function RegisterForm() {
         setErrors( {} );
 
         try {
-            await dispatch( createUser( data ) );
-
-            // If there's an error after dispatching, show it in a toast
-            if ( error ) {
-                toast( {
-                    variant: "destructive",
-                    title: "Registration Failed",
-                    description: error,
-                } );
-                return;
-            }
-
-            // If registration succeeds, show success message and navigate to login page
-            toast( {
-                title: "Register",
-                description: "Account Created Successfully",
-            } );
-
-            navigate( '/login' );
+            // axios request
+            dispatch( loginToDashboard( data ) );
         } catch ( error ) {
-            console.error( "Failed to create account:", error );
+            const loginErr = error instanceof Error ? error.message : String( error );
+            toast( {
+                variant: "destructive",
+                title: "Error",
+                description: loginErr,
+            } );
         }
     };
+
+    useEffect( () => {
+        if ( loginError ) {
+            toast( {
+                variant: "destructive",
+                title: "Login Failed",
+                description: loginError,
+            } );
+        }
+
+        // Handle successful login
+        if ( !loading && !loginError && success ) {
+            toast( {
+                title: "Login Successful",
+                description: "Login to Dashboard Successfully",
+            } );
+
+            // store token and userinfo in cookies
+            if ( token && userInfo ) {
+                Cookies.set( 'token', token || '', { expires: 7 } );
+                Cookies.set( 'userInfo', userInfo ? JSON.stringify( userInfo ) : '', { expires: 7 } );
+            }
+
+            navigate( '/' );
+        }
+
+    }, [ loginError, success, loading, toast, navigate, token, userInfo ] );
 
     return (
         <div className="mx-3 max-w-[450px]">
             <form onSubmit={ handleSubmit }>
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username">User Name</Label>
-                        <div className="col-span-3">
-                            <Input
-                                id="username"
-                                name="username"
-                                placeholder="Enter username"
-                                onChange={ handleChange }
-                            />
-                            { errors.username && (
-                                <small className="text-sm text-red-500">{ errors.username }</small>
-                            ) }
-                        </div>
-                    </div>
-
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="email">Email</Label>
                         <div className="col-span-3">
@@ -134,7 +137,7 @@ export default function RegisterForm() {
                     </div>
 
                 </div>
-                <Button className="w-full" type="submit">Create Account</Button>
+                <Button className="w-full" type="submit" disabled={ loading }>Login</Button>
             </form>
         </div>
     );
