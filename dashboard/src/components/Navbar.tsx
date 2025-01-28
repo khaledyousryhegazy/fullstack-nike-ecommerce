@@ -1,7 +1,9 @@
 import {
     LogIn,
+    LogOut,
     // LogOut,
     User,
+    User2,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -13,10 +15,18 @@ import {
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { ModeToggle } from "./mode-toggle"
+import { useSelector } from "react-redux"
+import { authIsLoggedIn } from "@/rtk/features/protect-routes/authSelectors"
+import { useAppDispatch } from "@/hooks/useAppDispatch"
+import { authLogout } from "@/rtk/features/protect-routes/auth"
 
 export default function Navbar() {
+
+    const isLoggedIn = useSelector( authIsLoggedIn )
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     return (
         <div className="w-full flex gap-2 justify-end">
             <ModeToggle />
@@ -26,15 +36,33 @@ export default function Navbar() {
                     <Button variant="outline"><User /></Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel>Account Info</DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    { !isLoggedIn ?
+                        <DropdownMenuItem>
+                            <LogIn />
+                            <Link to={ '/login' }>
+                                <span>Login</span>
+                            </Link>
+                        </DropdownMenuItem>
+                        :
+                        <div>
+                            <Link to={ '/user-profile' }>
+                                <DropdownMenuItem className="cursor-pointer">
+                                    <User2 />
+                                    <span>Profile</span>
+                                </DropdownMenuItem>
+                            </Link>
 
-                    <DropdownMenuItem>
-                        <LogIn />
-                        <Link to={ '/login' }>
-                            <span>Login</span>
-                        </Link>
-                    </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer" onClick={ () => {
+                                dispatch( authLogout() )
+                                navigate( '/login' )
+                            } }>
+                                <LogOut />
+                                <span>logout</span>
+                            </DropdownMenuItem>
+                        </div>
+                    }
                 </DropdownMenuContent>
             </DropdownMenu>
 

@@ -6,12 +6,12 @@ import { Label } from "@/components/ui/label";
 
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginToDashboard } from "@/rtk/features/login/loginThunk";
 import { useSelector } from "react-redux";
 import { selectLoginError, selectLoginLoading, selectLoginSuccess, selectLoginUserInfo, selectLoginUserToken } from "@/rtk/features/login/LoginSelectors";
 import { useToast } from "@/hooks/use-toast";
-import Cookies from 'js-cookie';
+import { authLogin } from "@/rtk/features/protect-routes/auth";
 
 const loginSchema = z.object( {
     email: z.string().email(),
@@ -92,14 +92,13 @@ export default function LoginForm() {
 
             // store token and userinfo in cookies
             if ( token && userInfo ) {
-                Cookies.set( 'token', token || '', { expires: 7 } );
-                Cookies.set( 'userInfo', userInfo ? JSON.stringify( userInfo ) : '', { expires: 7 } );
+                dispatch( authLogin( { user: userInfo, token: token } ) )
             }
 
             navigate( '/' );
         }
 
-    }, [ loginError, success, loading, toast, navigate, token, userInfo ] );
+    }, [ loginError, success, loading, toast, navigate, token, userInfo, dispatch ] );
 
     return (
         <div className="mx-3 max-w-[450px]">
@@ -137,6 +136,7 @@ export default function LoginForm() {
                     </div>
 
                 </div>
+                <Link to={ '/register' } className="text-sm my-2 block">Don't have an account ?</Link>
                 <Button className="w-full" type="submit" disabled={ loading }>Login</Button>
             </form>
         </div>

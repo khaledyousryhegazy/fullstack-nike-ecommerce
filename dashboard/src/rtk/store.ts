@@ -3,6 +3,7 @@ import productSlice from "./features/products/productSlice";
 import usersSlice from "./features/users/UsersSlice";
 import registerSlice from "./features/register/registerSlice";
 import loginSlice from "./features/login/loginSlice";
+import authSlice from "./features/protect-routes/auth";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     user: usersSlice,
     register: registerSlice,
     login: loginSlice,
+    auth: authSlice,
   },
 });
 

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAppDispatch } from "@/hooks/useAppDispatch";
 import { z } from "zod";
 import { createUser } from "@/rtk/features/register/registerThunk";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useSelector } from "react-redux";
 import { selectError } from "@/rtk/features/register/registerSelectors"; // Select error from state
@@ -134,6 +134,7 @@ export default function RegisterForm() {
                     </div>
 
                 </div>
+                <Link to={ '/login' } className="text-sm my-2 block">Already have an account ?</Link>
                 <Button className="w-full" type="submit">Create Account</Button>
             </form>
         </div>
