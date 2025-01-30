@@ -8,6 +8,7 @@ import Users from "./pages/Users";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import Orders from "./pages/Orders";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/products" element={ <Products /> } />
         <Route path="/users" element={ <Users /> } />
         <Route path="/user-profile" element={ <Profile /> } />
+        <Route path="/orders" element={ <Orders /> } />
       </Route>
     </Routes>
   );

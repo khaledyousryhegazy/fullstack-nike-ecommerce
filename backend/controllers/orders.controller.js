@@ -2,6 +2,22 @@
 const Order = require("../models/orders.model");
 const Cart = require("../models/cart.model");
 
+// get all orders [ADMIN ONLY]
+const getAllOrders = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const orders = await Order.find({})
+      .skip(parseInt(skip))
+      .limit(parseInt(limit));
+
+    res.status(200).json({ success: true, data: orders });
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 // Checkout and create a new order
 const createOrder = async (req, res) => {
   const { userId, shippingAddress, paymentMethod } = req.body;
@@ -88,6 +104,9 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getUserOrders, updateOrderStatus };
-
-module.exports = { createOrder, getUserOrders, updateOrderStatus };
+module.exports = {
+  getAllOrders,
+  createOrder,
+  getUserOrders,
+  updateOrderStatus,
+};

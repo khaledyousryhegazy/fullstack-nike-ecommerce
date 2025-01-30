@@ -45,18 +45,6 @@ export const register = async (data: IRegister) => {
   }
 };
 
-// login
-// export const login = async (data: ILogin) => {
-//   try {
-//     const res = await axios.post(`${API_BASE_URL}/login`, data);
-
-//     return res.data;
-//   } catch (error) {
-//     const errorMessage = error instanceof Error ? error.message : String(error);
-//     return { success: false, msg: errorMessage };
-//   }
-// };
-// login function to handle the login request
 export const login = async (data: ILogin) => {
   try {
     const res = await axios.post(`${API_BASE_URL}/login`, data);

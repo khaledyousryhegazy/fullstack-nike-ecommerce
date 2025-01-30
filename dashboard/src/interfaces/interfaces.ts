@@ -46,7 +46,7 @@ export interface IOrderArray {
 
 export interface IOrderData {
   success: boolean;
-  orders: IOrderArray[];
+  data: IOrderArray[];
 }
 
 export interface IOrder {

@@ -4,6 +4,7 @@ import usersSlice from "./features/users/UsersSlice";
 import registerSlice from "./features/register/registerSlice";
 import loginSlice from "./features/login/loginSlice";
 import authSlice from "./features/protect-routes/auth";
+import ordersSlice from "./features/orders/ordersSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     register: registerSlice,
     login: loginSlice,
     auth: authSlice,
+    orders: ordersSlice,
   },
 });
 
